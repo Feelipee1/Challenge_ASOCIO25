@@ -9,5 +9,8 @@ if __name__ == "__main__":
     numero = 3
     datos = cargar_instancia_json(numero)
 
-    print(f"Empleados en la instancia {numero}: {datos['Employees']}")
+    empleados = datos['Employees']
+    escritorios = datos['Desks']
 
+    print(empleados)
+    print(escritorios)
