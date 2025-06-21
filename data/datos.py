@@ -10,14 +10,15 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Abrir un solo archivo JSON (por ejemplo, instance1.json)
-with open("instance10.json", "r") as archivo:
+
+ruta = os.path.join(os.path.dirname(__file__), "instance10.json")
+with open(ruta, "r") as archivo:
     datos = json.load(archivo)
 
 # Cargar los datos del archivo JSON
 
 Employees = datos["Employees"] #Empleados
 print("Empleados:", Employees)
-
 
 
 Desks = datos["Desks"] #Escritorios

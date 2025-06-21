@@ -1,2 +1,18 @@
+# Ignore Python bytecode files
+__pycache__/
+*.py[cod]
+*$py.class
+**/*.py[cod]
 **/__pycache__/
-*.pyc
+
+# Ignore virtual environment directories
+venv/
+env/
+.virtualenv/
+.venv
+
+# Ignore environment variable files
+*.env
+.env.*
+
+**/*.xlsx
