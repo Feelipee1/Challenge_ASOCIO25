@@ -16,3 +16,6 @@ env/
 .env.*
 
 **/*.xlsx
+# Solvers
+src/optimizer/solvers/*.exe
+

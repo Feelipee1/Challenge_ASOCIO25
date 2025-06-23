@@ -1,58 +1,43 @@
-## Explicacion del modelo github
+# Optimización de Espacios de Trabajo
 
-📁 Challenge_ASOCIO25/
-Es la carpeta raíz del proyecto. Todo lo que desarrolles debe estar aquí dentro.
+Sistema de optimización para la asignación de escritorios y zonas de trabajo.
 
-📁 data/
-Contiene los archivos de entrada, por ejemplo los .json
+## Instalación
 
-📁 src/
-Contiene todo el código fuente del proyecto.
+1. Crear entorno virtual:
+```bash
+python -m venv .venv
+source .venv/bin/activate  # En Windows: .venv\Scripts\activate
+```
 
-📁 src/data/
+2. Instalar dependencias:
+```bash
+pip install -r requirements.txt
+```
 
-- funciones de lectura, validación y transformación de datos, por ejemplo:
+3. Instalar solvers:
+- CBC: Descargar de [COIN-OR](https://projects.coin-or.org/Cbc)
+- Gurobi: Descargar desde [Gurobi](https://www.gurobi.com/)
+- Mosek: Descargar desde [Mosek](https://www.mosek.com/)
 
-'''
+## Uso
 
-def cargar_datos_json(nombre_archivo):
-    # lee el archivo y devuelve estructuras en Python
-📁 src/optimizer/model/
-Aquí va la lógica del modelo de optimización, en este caso usando Gurobi.
+1. Colocar archivos de datos en la carpeta `data/`
+2. Ejecutar:
+```bash
+python src/main.py
+```
 
-model.py: es donde construirás el modelo matemático (variables, restricciones y función objetivo).
+## Estructura del Proyecto
 
-Podrías tener también un solver.py que ejecute la solución y devuelva resultados.
-
-📁 src/visualization/
-Si quieres agregar herramientas visuales (mostrar un mapa de escritorios y asignaciones) funciones con matplotlib, seaborn, o plotly.
-
-📄 src/main.py
-Es el script principal que se ejecutará
-
-Cargar los datos.
-
-Construir y resolver el modelo.
-
-Imprimir/exportar los resultados.
-
-if __name__ == "__main__":
-    # Ejecuta todo el flujo
-
-
-📄 .gitignore
-Lista de archivos/carpetas que no quieres subir a GitHub, por ejemplo:
-
-- __pycache__/
-- *.log
-- .env
-- *.pyc
-
-requirements.txt:
-
-gurobipy
-pandas
-numpy
+- `data/`: Archivos de entrada y recursos
+- `src/`: Código fuente
+  - `data/`: Módulos de datos
+  - `optimizer/`: Lógica de optimización
+  - `visualization/`: Visualizaciones
+- `venv/`: Entorno virtual
+- `requirements.txt`: Dependencias
+- `README.md`: Documentación
 
 ## Utilizar Gurobi
 
