@@ -39,6 +39,10 @@ def main():
         solver = SolverFactory("mosek_direct", executable=mosek_path)
 
     results = solver.solve(modelo, tee=True)
+
+    print("🔎 Estado del solver:")
+    print(f"  Status: {results.solver.status}")
+    print(f"  Termination condition: {results.solver.termination_condition}")
     
     # Presentar resultados
     presentar_resultados(modelo, param)
