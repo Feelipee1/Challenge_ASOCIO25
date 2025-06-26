@@ -19,3 +19,7 @@ env/
 # Solvers
 src/optimizer/solvers/*.exe
 
+# Ignore log files
+
+clone*.log
+cplex.log

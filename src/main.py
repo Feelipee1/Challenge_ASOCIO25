@@ -26,12 +26,15 @@ def main():
     modelo = construir_modelo_pyomo(param)
     mosek_path = os.path.join(base_dir, "src", "optimizer", "solvers", "mosek", "mosek.exe")
     gurobi_path = os.path.join(base_dir, "src", "optimizer", "solvers", "gurobi", "gurobi.exe")
+    cplex_path = os.path.join(base_dir, "src", "optimizer", "solvers", "cplex", "cplex.exe")
 
     # Seleccionar el solver
-    use_solver = 1 # 1 para Gurobi, 0 para MOSEK.
+    use_solver = 2 # 1 para Gurobi, 0 para MOSEK.
 
     if use_solver == 1:
         solver = SolverFactory("gurobi", executable=gurobi_path)
+    elif use_solver == 2:
+        solver = SolverFactory("cplex", executable=cplex_path)
     else:
         solver = SolverFactory("mosek_direct", executable=mosek_path)
 
