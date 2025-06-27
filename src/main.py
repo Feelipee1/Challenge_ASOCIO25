@@ -116,7 +116,7 @@ def inicializar_modelo_con_redondeo(modelo_relajado, modelo_binario, umbral=0.5)
 def main():
     # Configuración inicial usando la librería os
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    ruta_instancia = os.path.join(base_dir, "data", "instance5.json")
+    ruta_instancia = os.path.join(base_dir, "data", "instance10.json")
     # Cargar y procesar datos
     with open(ruta_instancia, "r", encoding="utf-8") as f:
         datos = json.load(f)
@@ -138,26 +138,32 @@ def main():
     elif use_solver == 2:
         solver = SolverFactory("cplex", executable=cplex_path)
         solver.options["mipgap"] = 0.05  # Detenerse cuando el gap sea del 10%
+        solver.options['timelimit'] = 900        # Máximo tiempo en segundos (2 horas, puedes cambiarlo)
+        # solver.options['mipdisplay'] = 4             # Muestra el progreso detallado
+        solver.options['solutiontype'] = 2           # Guarda soluciones primales
+        solver.options['workmem'] = 2048             # (Opcional) más memoria de trabajo
     else:
         solver = SolverFactory("mosek_direct", executable=mosek_path)
 
 
     # Resolver el modelo relajado
 
-    modelo_relajado = resolver_relajado(param, 2)
+    # modelo_relajado = resolver_relajado(param, 2)
 
     modelo = construir_modelo_pyomo(param)
 
     # Inicializar el modelo con los valores redondeados del modelo relajado
 
-    inicializar_modelo_con_redondeo(modelo_relajado, modelo, umbral=0.7)    
+    # inicializar_modelo_con_redondeo(modelo_relajado, modelo, umbral=0.7)    
     
     results = solver.solve(modelo, tee=True)
 
     # Presentar resultados
+
     presentar_resultados(modelo, param)
+
     # Exportar resultados a Excel
-    exportar_resultados_excel(modelo, param, ruta_salida="output/instance5_resultados.xlsx")
+    exportar_resultados_excel(modelo, param, ruta_salida="output/instance10_15MIN_resultado.xlsx")
 
     
 if __name__ == "__main__":
