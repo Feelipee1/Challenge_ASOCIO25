@@ -11,6 +11,7 @@ from pyomo.environ import *
 from src.visualization.visualization import presentar_resultados
 from src.optimizer.Inicial_solution.Inicial_solution import construir_modelo_pyomo_relajado
 from pyomo.environ import value
+from src.visualization.display import exportar_resultados_excel
 
 # from src.optimizer.Inicial_solution.Inicial_solution import InicialSolution
 
@@ -155,6 +156,8 @@ def main():
 
     # Presentar resultados
     presentar_resultados(modelo, param)
+    # Exportar resultados a Excel
+    exportar_resultados_excel(modelo, param, ruta_salida="output/instance5_resultados.xlsx")
 
     
 if __name__ == "__main__":
