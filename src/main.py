@@ -13,159 +13,70 @@ from src.optimizer.Inicial_solution.Inicial_solution import construir_modelo_pyo
 from pyomo.environ import value
 from src.visualization.display import exportar_resultados_excel
 
-# from src.optimizer.Inicial_solution.Inicial_solution import InicialSolution
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-def resolver_relajado(param, use_solver=2):
-
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-    modelo_relajado = construir_modelo_pyomo_relajado(param)
-
-    mosek_path = os.path.join(base_dir, "src", "optimizer", "solvers", "mosek", "mosek.exe")
-    gurobi_path = os.path.join(base_dir, "src", "optimizer", "solvers", "gurobi", "gurobi.exe")
-    cplex_path = os.path.join(base_dir, "src", "optimizer", "solvers", "cplex", "cplex.exe")
-
-    # Seleccionar el solver
-
-    if use_solver == 1:
-        solver = SolverFactory("gurobi", executable=gurobi_path)
-    elif use_solver == 2:
-        solver = SolverFactory("cplex", executable=cplex_path)
-    else:
-        solver = SolverFactory("mosek_direct", executable=mosek_path)
-
-    results = solver.solve(modelo_relajado)
-
-    return modelo_relajado
-
-def inicializar_modelo_con_redondeo(modelo_relajado, modelo_binario, umbral=0.5):
-    """
-    Inicializa el modelo_binario con los valores redondeados del modelo_relajado.
-
-    Args:
-        modelo_relajado (ConcreteModel): Modelo con variables relajadas resuelto.
-        modelo_binario (ConcreteModel): Modelo con variables binarias.
-        umbral (float): Umbral de redondeo (por defecto 0.5).
-    """
-    no_inicializadas = 0
-
-    # x
-    for e in modelo_relajado.E:
-        for d in modelo_relajado.D:
-            try:
-                val = value(modelo_relajado.x[e, d], exception=False)
-                if val is not None:
-                    modelo_binario.x[e, d].value = 1 if val >= umbral else 0
-            except:
-                no_inicializadas += 1
-
-    # y
-    for e in modelo_relajado.E:
-        for d in modelo_relajado.D:
-            for k in modelo_relajado.K:
-                try:
-                    val = value(modelo_relajado.y[e, d, k], exception=False)
-                    if val is not None:
-                        modelo_binario.y[e, d, k].value = 1 if val >= umbral else 0
-                except:
-                    no_inicializadas += 1
-
-    # z
-    for e in modelo_relajado.E:
-        for k in modelo_relajado.K:
-            try:
-                val = value(modelo_relajado.z[e, k], exception=False)
-                if val is not None:
-                    modelo_binario.z[e, k].value = 1 if val >= umbral else 0
-            except:
-                no_inicializadas += 1
-
-    # reunion
-    for g in modelo_relajado.G:
-        for d in modelo_relajado.D:
-            try:
-                val = value(modelo_relajado.reunion[g, d], exception=False)
-                if val is not None:
-                    modelo_binario.reunion[g, d].value = 1 if val >= umbral else 0
-            except:
-                no_inicializadas += 1
-
-    # u
-    for g in modelo_relajado.G:
-        for z in modelo_relajado.Z:
-            for d in modelo_relajado.D:
-                try:
-                    val = value(modelo_relajado.u[g, z, d], exception=False)
-                    if val is not None:
-                        modelo_binario.u[g, z, d].value = 1 if val >= umbral else 0
-                except:
-                    no_inicializadas += 1
-
-    # slack
-    for e in modelo_relajado.E:
-        try:
-            val = value(modelo_relajado.slack[e], exception=False)
-            if val is not None:
-                modelo_binario.slack[e].value = round(val)  # redondeo a entero
-        except:
-            no_inicializadas += 1
-
-    print(f"✅ Inicialización completada. 🔢 Variables omitidas por falta de valor o error: {no_inicializadas}")
-
 def main():
-    # Configuración inicial usando la librería os
+    print("🎯 BIENVENIDO AL OPTIMIZADOR DE PUESTOS DE TRABAJO (ASOCIO 2025) 🎯\n")
+
+    # Mostrar opciones al usuario
+    print("📂 Selección de instancia disponible (instance1.json a instance10.json)")
+    while True:
+        try:
+            instancia_num = int(input("🔢 Ingresa el número de la instancia que deseas cargar (1-10): "))
+            if instancia_num < 1 or instancia_num > 10:
+                raise ValueError
+            break
+        except ValueError:
+            print("⚠️ Por favor, ingresa un número válido entre 1 y 10.\n")
+
+    print("\n⏱️ Establecer tiempo límite de ejecución")
+    while True:
+        try:
+            tiempo_limite = int(input("⏰ Ingresa el tiempo máximo de solución en segundos (por ejemplo, 900): "))
+            if tiempo_limite <= 0:
+                raise ValueError
+            break
+        except ValueError:
+            print("⚠️ Ingresa un número entero positivo.\n")
+
+    # Mostrar mensaje sobre el solver
+    print("\n⚙️ Se usará por defecto el solver: CPLEX")
+    print("📌 Si deseas usar otro solver como Gurobi o MOSEK, modifica el código fuente en esta función.")
+
+    # Cargar la instancia seleccionada
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    ruta_instancia = os.path.join(base_dir, "data", "instance10.json")
-    # Cargar y procesar datos
+    nombre_archivo = f"instance{instancia_num}.json"
+    ruta_instancia = os.path.join(base_dir, "data", nombre_archivo)
+
+    if not os.path.exists(ruta_instancia):
+        print(f"❌ No se encontró el archivo: {ruta_instancia}")
+        return
+
     with open(ruta_instancia, "r", encoding="utf-8") as f:
         datos = json.load(f)
     param = preparar_datos_desde_json(datos)
-    
-    # Construir y resolver el modelo
-    # modelo = construir_modelo_pyomo(param)
 
-    mosek_path = os.path.join(base_dir, "src", "optimizer", "solvers", "mosek", "mosek.exe")
-    gurobi_path = os.path.join(base_dir, "src", "optimizer", "solvers", "gurobi", "gurobi.exe")
+    # Crear solver
     cplex_path = os.path.join(base_dir, "src", "optimizer", "solvers", "cplex", "cplex.exe")
+    solver = SolverFactory("cplex", executable=cplex_path)
+    solver.options["mipgap"] = 0.05
+    solver.options["timelimit"] = tiempo_limite
+    solver.options["solutiontype"] = 2
+    solver.options["workmem"] = 2048
 
-    # Seleccionar el solver
-    use_solver = 2 # 1 para Gurobi, 0 para MOSEK
-   
-    
-    if use_solver == 1:
-        solver = SolverFactory("gurobi", executable=gurobi_path)
-    elif use_solver == 2:
-        solver = SolverFactory("cplex", executable=cplex_path)
-        solver.options["mipgap"] = 0.05  # Detenerse cuando el gap sea del 10%
-        solver.options['timelimit'] = 900        # Máximo tiempo en segundos (2 horas, puedes cambiarlo)
-        # solver.options['mipdisplay'] = 4             # Muestra el progreso detallado
-        solver.options['solutiontype'] = 2           # Guarda soluciones primales
-        solver.options['workmem'] = 2048             # (Opcional) más memoria de trabajo
-    else:
-        solver = SolverFactory("mosek_direct", executable=mosek_path)
-
-
-    # Resolver el modelo relajado
-
-    # modelo_relajado = resolver_relajado(param, 2)
-
+    # Construir modelo y resolver
+    print("\n🚧 Construyendo el modelo...")
     modelo = construir_modelo_pyomo(param)
 
-    # Inicializar el modelo con los valores redondeados del modelo relajado
-
-    # inicializar_modelo_con_redondeo(modelo_relajado, modelo, umbral=0.7)    
-    
+    print("\n🚀 Ejecutando el solver...")
     results = solver.solve(modelo, tee=True)
 
-    # Presentar resultados
-
+    # Presentar y exportar resultados
     presentar_resultados(modelo, param)
 
-    # Exportar resultados a Excel
-    exportar_resultados_excel(modelo, param, ruta_salida="output/instance10_15MIN_resultado.xlsx")
+    nombre_salida = f"output/instance{instancia_num}_{tiempo_limite}s_resultado.xlsx"
+    exportar_resultados_excel(modelo, param, ruta_salida=nombre_salida)
 
-    
+    print(f"\n📦 Resultados guardados en: {nombre_salida}")
+    print("✅ Optimización finalizada. ¡Gracias por usar el sistema!\n")
+
 if __name__ == "__main__":
     main()
-
