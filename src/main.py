@@ -9,7 +9,6 @@ from src.data.load_data import preparar_datos_desde_json
 from src.optimizer.model.model import construir_modelo_pyomo
 from pyomo.environ import *
 from src.visualization.visualization import presentar_resultados
-from src.optimizer.Inicial_solution.Inicial_solution import construir_modelo_pyomo_relajado
 from pyomo.environ import value
 from src.visualization.display import exportar_resultados_excel
 

@@ -1,3 +1,8 @@
+"""
+Este archivo contiene la función `exportar_resultados_excel`, que exporta las asignaciones de días, escritorios y reuniones de un modelo de optimización a un archivo Excel.
+Utiliza pandas para crear hojas con las asignaciones de empleados, reuniones por grupo y el slack usado por empleado.
+"""
+
 import pandas as pd
 import os
 

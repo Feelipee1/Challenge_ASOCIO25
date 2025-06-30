@@ -1,5 +1,20 @@
 """
-Modulo para presentar los resultados de la asignación de días y escritorios.
+Módulo para presentar los resultados de la asignación de días y escritorios.
+
+Este archivo contiene la función `presentar_resultados`, que toma como entrada un modelo de optimización y los parámetros asociados,
+y muestra en consola un resumen detallado de las asignaciones realizadas. 
+
+La función imprime:
+- La asignación de días y escritorios por empleado, indicando si usó varios escritorios o ninguno.
+- El resumen de empleados asignados por día.
+- La asistencia de los grupos a reuniones, indicando si faltó algún miembro.
+- Las zonas utilizadas por cada grupo en cada día, alertando si se usan demasiadas zonas.
+- Los empleados que recibieron días no preferidos.
+- La validación del cumplimiento del mínimo de días presenciales y el uso de slack.
+- La validación de aislamiento por zona, para evitar que empleados de un grupo queden solos en una zona.
+- Un resumen general con totales de empleados, días asignados y slack utilizado.
+
+Este módulo está pensado para facilitar la interpretación de los resultados de la optimización y detectar posibles problemas en la asignación.
 """
 
 from collections import defaultdict

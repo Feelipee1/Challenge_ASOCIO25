@@ -15,17 +15,29 @@ source .venv/bin/activate  # En Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-3. Instalar solvers:
-- CBC: Descargar de [COIN-OR](https://projects.coin-or.org/Cbc)
-- Gurobi: Descargar desde [Gurobi](https://www.gurobi.com/)
-- Mosek: Descargar desde [Mosek](https://www.mosek.com/)
+---
+
+3. 🧰 Instalación de CPLEX (Recomendado)
+
+Este proyecto usa **CPLEX** como solver principal, ya que no requiere licencia académica para uso local en problemas pequeños y es altamente eficiente.
+
+### 🔽 Pasos para instalar CPLEX:
+
+1. Crea una cuenta gratuita en IBM Research:
+   👉 https://www.ibm.com/account/reg/us-en/signup?formid=urx-19776
+
+2. Descarga IBM ILOG CPLEX Optimization Studio desde:
+   👉 https://www.ibm.com/products/ilog-cplex-optimization-studio
+
+3. Durante la instalación, selecciona una ruta accesible. Ejemplo típico en Windows:
+
 
 ## Uso
 
 1. Colocar archivos de datos en la carpeta `data/`
 2. Ejecutar:
 ```bash
-python -m src/main.py
+python -m src.main
 ```
 
 ## Estructura del Proyecto
@@ -40,6 +52,24 @@ python -m src/main.py
 - `venv/`: Entorno virtual
 - `requirements.txt`: Dependencias
 - `README.md`: Documentación
+
+## 📊 Salida de Resultados
+Al finalizar la ejecución, el sistema genera automáticamente un archivo .xlsx con:
+
+Hoja 1: Asignación de empleados por día y escritorio
+
+Hoja 2: Reuniones de grupo asignadas
+
+Hoja 3: Empleados que requirieron slack (por incumplimiento de días)
+
+Además, los resultados se imprimen en consola con análisis por empleado, por día, por grupo y por zonas.
+
+## 🧠 Notas Finales
+El modelo puede tardar más tiempo en instancias grandes. Se recomienda comenzar con las instancias pequeñas para pruebas iniciales.
+
+CPLEX es usado como solver predeterminado por su eficiencia y facilidad de integración.
+
+El sistema está preparado para escalar a nuevas instancias sin requerir modificaciones al código fuente.
 
 ## Ejemplo 1 de respuesta para las Instances1.json
 

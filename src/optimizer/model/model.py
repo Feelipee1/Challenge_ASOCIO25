@@ -1,5 +1,8 @@
 """
-En este archivo va el modelo matematico
+Este archivo define un modelo matemático de optimización usando Pyomo para asignar empleados a escritorios en una oficina,
+considerando restricciones de asistencia mínima y máxima, preferencias de días, compatibilidad de escritorios, reuniones de grupo,
+uso de zonas y evitando aislamiento de empleados. El objetivo es maximizar la satisfacción de preferencias y minimizar penalizaciones 
+por incumplimiento de restricciones.
 """
 
 from pyomo.environ import  *
