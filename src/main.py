@@ -1,5 +1,8 @@
 """
-Codigo para ejecutar todo el proyecto de optimizacion
+Codigo principal del optimizador de puestos de trabajo (ASOCIO 2025)
+Este script permite al usuario seleccionar una instancia de datos, 
+establecer un tiempo límite para la solución y ejecutar un modelo de optimización para asignar empleados a escritorios, 
+considerando restricciones de días, zonas y reuniones.
 """
 
 import json

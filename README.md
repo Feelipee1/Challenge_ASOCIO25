@@ -47,7 +47,7 @@ python -m src.main
   - `data/`: Módulos de datos
   - `optimizer/`: Lógica de optimización
     - `model/`: Modelo Matematico en Pyomo
-    - `solvers/`: Solvers.exe
+    - `solvers/`: cplex.exe
   - `visualization/`: Visualizaciones
 - `venv/`: Entorno virtual
 - `requirements.txt`: Dependencias
